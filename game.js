@@ -115,19 +115,14 @@ function create ()
   //RAMDOM PICK A background music
   var randomnumber = Phaser.Math.Between(1, 5);
   if(randomnumber ==1){
-    alert(1)
     bgmusic = this.sound.add('bgmusic');  
   }else if(randomnumber ==2){
-    alert(2)
     bgmusic = this.sound.add('bg2music');  
   }else if(randomnumber ==3){
-    alert(3)
     bgmusic = this.sound.add('bg3music');  
   }else if(randomnumber ==4){
-    alert(4)
     bgmusic = this.sound.add('bg4music');  
   }else if(randomnumber ==5){
-    alert(5)
     bgmusic = this.sound.add('bg5music');  
   }
 
