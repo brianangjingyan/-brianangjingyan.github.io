@@ -41,10 +41,13 @@ function preload ()
   this.load.spritesheet('dudeup', 'images/dudeup.png',{ frameWidth: 32, frameHeight: 48 })
 
   this.load.audio('bgmusic', ['sounds/TFR.mp3']);
-  this.load.audio('jumpsound', ['sounds/Bruh.mp3']);
-  this.load.audio('GCsound', ['sounds/gravityChange.mp3']);
+  this.load.audio('bg2music', ['sounds/TFR2.mp3']);
+  this.load.audio('bg3music', ['sounds/TFR3.mp3']);
+  this.load.audio('bg4music', ['sounds/TFR4.mp3']);
+  this.load.audio('bg5music', ['sounds/TFR5.mp3']);
 
-  
+  this.load.audio('jumpsound', ['sounds/jump.mp3']);
+  this.load.audio('GCsound', ['sounds/gravityChange.mp3']);
 
 }
 
@@ -89,6 +92,7 @@ function create ()
     frameRate: 10,
     repeat: -1
   })
+
   this.anims.create({
     //running to right animation(when gravity is up)
     key: 'upright',
@@ -108,17 +112,24 @@ function create ()
   //play right animation for player when game starts
   this.player.anims.play('right', false)
 
-  //loop the background music
-  bgmusic = this.sound.add('bgmusic');
-  
-  /*
-  setTimeout(bgmusic.play({
-    loop: true,
-    volume: 0.3,
-   }));
-  */
-   
-   
+  //RAMDOM PICK A background music
+  var randomnumber = Phaser.Math.Between(1, 5);
+  if(randomnumber ==1){
+    alert(1)
+    bgmusic = this.sound.add('bgmusic');  
+  }else if(randomnumber ==2){
+    alert(2)
+    bgmusic = this.sound.add('bg2music');  
+  }else if(randomnumber ==3){
+    alert(3)
+    bgmusic = this.sound.add('bg3music');  
+  }else if(randomnumber ==4){
+    alert(4)
+    bgmusic = this.sound.add('bg4music');  
+  }else if(randomnumber ==5){
+    alert(5)
+    bgmusic = this.sound.add('bg5music');  
+  }
 
    //this sound is for jump
    jumpsound = this.sound.add('jumpsound');
@@ -156,26 +167,28 @@ function update ()
   //change gravity of the player when ‘UP’/'DOWN' is pressed,
   if (this.cursors.up.isDown&& this.player.body.touching.down ) {
     //sound effect
-    jumpsound.play({volume:0.8});
+    jumpsound.play({volume:0.2});
     this.player.setVelocityY(-100);
     this.player.body.gravity.y = -1600;
 
     this.player.anims.play('upright', true)
   } else if (this.cursors.down.isDown && this.player.body.touching.up ) {
     //sound effect
-    jumpsound.play({volume:0.8});
+    jumpsound.play({volume:0.2});
 
     this.player.setVelocityY(100);
     this.player.body.gravity.y = 0;
 
     this.player.anims.play('right', true)
+  } else if (this.cursors.left.isDown && this.player.body.touching.up ) {
+    alert('apause')
   } 
 
   //this is to let the sprite jump when ‘SPACE’ is press,speed =300
   if (this.cursors.space.isDown && this.player.body.touching.down ) {
     GCsound.play({volume:0.4});
     this.player.setVelocityY(-320)
-  }else if (this.cursors.space.isDown && this.player.body.touching.up) {
+  }else if (this.cursors.space.isDown && this.player.body.touching.up) {  
     GCsound.play({volume:0.4});
     this.player.setVelocityY(320)
   }
@@ -194,7 +207,8 @@ function update ()
       alert("GAME OVER!! \nYOUR SCORE: "+ Math.ceil(score) +"\n HIGHEST SCORE: "+ Math.ceil(highscore))
     }
     
-      this.registry.destroy(); // destroy registry
+    bgmusic.stop();
+    this.registry.destroy(); // destroy registry
     this.events.off(); // disable all active events
     this.scene.restart(); // restart current scene
   }
@@ -216,7 +230,8 @@ function addTile(x,y,z){
   if (z == "up"){
     tile = platformGroup.create(x, y, 'tileup')
   }else{
-    tile = platformGroup.create(x, y, 'tile')
+    //5% chance create cactus
+        tile = platformGroup.create(x, y, 'tile')
   }
 
   //set the physic config of platform
@@ -244,18 +259,23 @@ function addPlatformTop() {
   }else if( platformSizepb>0.6 && platformSizepb<=0.9 ){
     platformSize=7
   }else if( platformSizepb>0.9 && platformSizepb<=1 ){
-    platformSize=3
+    platformSize=5
   }else{
     platformSize=5
   }
 
   
-  //generate random hole size 3-6
+  /*
+  generate random hole size 
+  5% 7
+  5% 5
+  (90/4)% 2,3,4,5
+  */
   var holesize = Phaser.Math.Between(2, 5);
   if(Math.random()<=0.05){
-    holesize=6
+    holesize=7
  }else if(Math.random()<=0.1){
-   holesize=7
+   holesize=5
  }
 
   //creating platform
@@ -301,12 +321,17 @@ function addPlatformBottom() {
   }
 
   
-  //generate random hole size 2-6
+  /*
+  generate random hole size 
+  5% 7
+  5% 5
+  (90/4)% 2,3,4,5
+  */
   var holesize = Phaser.Math.Between(2, 5);
   if(Math.random()<=0.05){
-    holesize=6
+    holesize=7
  }else if(Math.random()<=0.1){
-   holesize=7
+   holesize=5
  }
 
   //creating platform
@@ -320,11 +345,6 @@ function addPlatformBottom() {
 
   //call this function out after delaytime
   this.time.addEvent({ delay:delaytime , callback: addPlatformBottom, callbackScope: this, loop: false })
-
-}
-
-//this function will save the highscore into txt file
-function loadfromTXT() {
 
 }
 
